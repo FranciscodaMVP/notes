@@ -1,0 +1,10 @@
+1.  Create a web app that allows a user to create notes.
+● Must be able to create new notes
+● Must be able to delete notes
+● Must be able to edit notes
+● Must be able to view all notes created
+● Notes must be persistent (remain even after the browser has been closed and reopened)
+The following information must be kept:
+● Date of creation (cannot be modified)
+● Date of last edit (must be updated only when information is edited)
+● Text data
