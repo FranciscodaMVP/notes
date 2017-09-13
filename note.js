@@ -1,10 +1,12 @@
 var newNote = document.getElementById('newNote');
-var noteTitle = document.getElementById('noteTitle');
 var saveButton = document.querySelector('.save');
 
 saveButton.addEventListener('click', keep);
 
-let notes = [];
+if (localStorage.getItem('notas')){
+    var notes = (JSON.parse(localStorage.getItem('notas')));
+    append();
+} else { var notes = [];}
 
 function keep() {
     note = newNote.value;
@@ -12,6 +14,10 @@ function keep() {
     notes.push (note);
 
     append();
+
+    localStorage.setItem('notas', JSON.stringify(notes));
+
+    console.log(JSON.parse(localStorage.getItem('notas')));
 }
 
 function append() {
@@ -23,17 +29,14 @@ function append() {
 
     table.border = '1';
     table.appendChild(tablebody);
-    //table.innerHTML = '';
     let tr = document.createElement('TR');
     tablebody.appendChild(tr);
     let th = document.createElement('TH');
     th.appendChild(document.createTextNode(' notes '));
     tr.appendChild(th);
-    //tablebody.appendChild(tr);
 
     for (i=0; i<notes.length; i++) {
         let tr = document.createElement('TR');
-        //tr.id = i;
 
         let td = document.createElement('TD');
         let newContent = document.createTextNode(notes[i]);
@@ -45,7 +48,6 @@ function append() {
         editBtn.addEventListener('click', function(){ edit(i)});
         editBtn.id = 'edit'+i;
         tr.appendChild(editBtn);
-
 
         let deleteButton = document.createElement('button');
         deleteButton.innerHTML = 'delete';
@@ -60,7 +62,11 @@ function append() {
 }
 
 function edit(id) {
+    console.log(notes);
     console.log(id);
+    let editNote = notes[id];
+    console.log(editNote);
+    newNote.textContent = editNote;
 }
 
 function deleteNote(id) {
