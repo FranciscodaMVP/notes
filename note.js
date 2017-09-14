@@ -6,18 +6,21 @@ saveButton.addEventListener('click', keep);
 if (localStorage.getItem('notas')){
     var notes = (JSON.parse(localStorage.getItem('notas')));
     append();
-} else { var notes = [];}
+} else { var notes = {};}
 
 function keep() {
     note = newNote.value;
+    let date = new Date();
     newNote.value = '';
-    notes.push (note);
+    let fullNote = {
+        'note' : note,
+        'created' : date,
+        'modified' : '',
+    }
+    
+    notes.push (fullNote);
 
     append();
-
-    localStorage.setItem('notas', JSON.stringify(notes));
-
-    console.log(JSON.parse(localStorage.getItem('notas')));
 }
 
 function append() {
@@ -25,33 +28,50 @@ function append() {
     tablediv.innerHTML='';
 
     let table = document.createElement('TABLE');
-    var tablebody = document.createElement('TABLEBODY');
 
     table.border = '1';
-    table.appendChild(tablebody);
     let tr = document.createElement('TR');
-    tablebody.appendChild(tr);
+    table.appendChild(tr);
     let th = document.createElement('TH');
     th.appendChild(document.createTextNode(' notes '));
+    let th1 = document.createElement('TH');
+    th1.appendChild(document.createTextNode(' created '));
+    let th2 = document.createElement('TH');
+    th2.appendChild(document.createTextNode(' modified '));
+    
     tr.appendChild(th);
+    tr.appendChild(th1);
+    tr.appendChild(th2);
+
 
     for (i=0; i<notes.length; i++) {
         let tr = document.createElement('TR');
 
         let td = document.createElement('TD');
-        let newContent = document.createTextNode(notes[i]);
+        let newContent = document.createTextNode(notes[i].note);
         td.appendChild(newContent);
         tr.appendChild(td);
 
+        let dateTD = document.createElement('TD');
+        let created = document.createTextNode(notes[i].created);
+        dateTD.appendChild(created);
+        tr.appendChild(dateTD);
+
+        let modifiedTD = document.createElement('TD');
+        let modified = document.createTextNode(notes[i].modified);
+        modifiedTD.appendChild(modified);
+        tr.appendChild(modifiedTD);
+
         let editBtn = document.createElement('button');
         editBtn.innerHTML = 'edit';
-        editBtn.addEventListener('click', function(){ edit(i)});
-        editBtn.id = 'edit'+i;
+        editBtn.id = i;
+        editBtn.addEventListener('click', function(){ edit(editBtn.id)});
         tr.appendChild(editBtn);
 
         let deleteButton = document.createElement('button');
         deleteButton.innerHTML = 'delete';
-        deleteButton.addEventListener('click', function () { deleteNote(i)});
+        deleteButton.id = i;
+        deleteButton.addEventListener('click', function () { deleteNote(deleteButton.id)});
         tr.appendChild(deleteButton);
 
 
@@ -59,17 +79,16 @@ function append() {
     }
         
     tablediv.appendChild(table);
+    localStorage.setItem('notas', JSON.stringify(notes));
 }
 
 function edit(id) {
-    console.log(notes);
-    console.log(id);
     let editNote = notes[id];
-    console.log(editNote);
-    newNote.textContent = editNote;
+    newNote.textContent = editNote.note;
 }
 
 function deleteNote(id) {
-    notes.splice(id-1, 1);
+    console.log(id);
+    notes.splice(id, 1);
     append();
 }
