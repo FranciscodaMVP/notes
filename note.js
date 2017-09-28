@@ -11,14 +11,27 @@ if (localStorage.getItem('notas')){
 function keep() {
     note = newNote.value;
     let date = new Date();
-    newNote.value = '';
-    let fullNote = {
-        'note' : note,
-        'created' : date,
-        'modified' : '',
+
+    if (newNote.name){
+        newData = {
+            'note' : note,
+            'modified' : date,}
+        
+        notes[newNote.name].note = newData.note;
+        notes[newNote.name].modified = newData.modified;
+        newNote.removeAttribute('name');
+
+
+    }else {
+        let fullNote = {
+            'note' : note,
+            'created' : date,
+            'modified' : '',
+        }
+        notes.push (fullNote);
     }
-    
-    notes.push (fullNote);
+
+    newNote.value ='';
 
     append();
 }
@@ -83,12 +96,15 @@ function append() {
 }
 
 function edit(id) {
+    
     let editNote = notes[id];
-    newNote.textContent = editNote.note;
+
+    newNote.value = editNote.note;
+    newNote.setAttribute('name', id);
 }
 
 function deleteNote(id) {
-    console.log(id);
+
     notes.splice(id, 1);
     append();
 }
